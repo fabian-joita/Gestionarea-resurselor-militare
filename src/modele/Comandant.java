@@ -19,33 +19,75 @@ public class Comandant extends Utilizator {
                 "Comandant");
 
         this.gradMilitar = gradMilitar;
-        this.notificari = new ArrayList<>();
+
+        this.notificari =
+                new ArrayList<>();
     }
 
-    public boolean aprobareDecizieLogistica(BazaMilitara baza) {
+    /**
+     * Operatie complexa pentru diagrama de activitati
+     */
+    public boolean aprobareDecizieLogistica(
+            BazaMilitara baza) {
 
         System.out.println(
-                "Comandantul verifica vehiculele disponibile...");
+                "Initiere verificare vehicule disponibile...");
 
-        int disponibile =
-                baza.getVehiculDisponibile().size();
+        List<VehiculMilitar> disponibile =
+                baza.getVehiculDisponibile();
 
-        if (disponibile > 0) {
+        if (disponibile.isEmpty()) {
 
-            System.out.println(
-                    "Misiune aprobata.");
-
-            return true;
-
-        } else {
-
-            primesteNotificare(
-                    "Nu exista vehicule disponibile.");
+            pregatireNotificareLipsaVehicule();
 
             return false;
         }
+
+        System.out.println(
+                "Vehicule disponibile identificate.");
+
+        boolean combustibilSuficient =
+                baza.verificaCombustibilVehicule();
+
+        if (!combustibilSuficient) {
+
+            System.out.println(
+                    "Solicitare realimentare vehicule...");
+
+            baza.realimentareVehicule();
+
+            boolean confirmare =
+                    baza.confirmareRealimentare();
+
+            if (!confirmare) {
+
+                primesteNotificare(
+                        "Realimentarea a esuat.");
+
+                return false;
+            }
+        }
+
+        System.out.println(
+                "Misiune aprobata.");
+
+        genereazaRaport();
+
+        return true;
     }
 
+    /**
+     * Pregatire notificare lipsa vehicule
+     */
+    public void pregatireNotificareLipsaVehicule() {
+
+        primesteNotificare(
+                "Nu exista vehicule disponibile.");
+    }
+
+    /**
+     * Primire notificare
+     */
     public void primesteNotificare(String mesaj) {
 
         notificari.add(mesaj);
@@ -54,6 +96,9 @@ public class Comandant extends Utilizator {
                 "Notificare comandant: " + mesaj);
     }
 
+    /**
+     * Generare raport
+     */
     public void genereazaRaport() {
 
         System.out.println(

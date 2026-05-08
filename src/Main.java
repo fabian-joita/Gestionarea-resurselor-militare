@@ -1,4 +1,4 @@
-package modele;
+import modele.*;
 
 public class Main {
 
@@ -14,7 +14,7 @@ public class Main {
         // Adaugare vehicule
         baza.adaugaVehiculInInventar(
                 "V1",
-                "Transportor",
+                "Transportor Blindat",
                 50,
                 "Disponibil"
         );
@@ -58,36 +58,51 @@ public class Main {
                         "Motoare"
                 );
 
-        // Asociere personal
+        // Asociere personal la baza
         baza.adaugaPersonal(comandant);
         baza.adaugaPersonal(operator);
         baza.adaugaPersonal(inginer);
 
-        // Operatorul raporteaza lipsa
+        System.out.println(
+                "\n===== RAPORTARE LIPSA =====");
+
+        // Raportare lipsa resurse
         operator.raporteazaLipsa(
                 baza,
                 "Munitie",
                 comandant
         );
 
-        // Inginerul verifica vehicul
+        System.out.println(
+                "\n===== INSPECTIE VEHICUL =====");
+
+        // Selectare vehicul pentru inspectie
         VehiculMilitar vehicul =
                 baza.getToateVehiculele().get(1);
 
-        inginer.inspecteazaVehicul(vehicul);
+        // Inspectie tehnica
+        inginer.inspecteazaVehicul(
+                vehicul
+        );
 
-        // Comandantul aproba misiunea
+        System.out.println(
+                "\n===== APROBARE MISIUNE =====");
+
+        // Aprobare logistica
         boolean rezultat =
                 comandant.aprobareDecizieLogistica(
                         baza
                 );
 
         System.out.println(
-                "Rezultat aprobare: "
+                "\nRezultat aprobare: "
                         + rezultat
         );
 
-        // Generare raport
+        System.out.println(
+                "\n===== RAPORT FINAL =====");
+
+        // Generare raport final
         comandant.genereazaRaport();
     }
 }

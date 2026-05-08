@@ -28,6 +28,9 @@ public class BazaMilitara {
                 new ArrayList<>();
     }
 
+    /**
+     * Adaugare vehicul
+     */
     public void adaugaVehiculInInventar(String id,
                                         String model,
                                         double combustibil,
@@ -42,9 +45,79 @@ public class BazaMilitara {
                 );
 
         inventarVehicule.add(vehicul);
+    }
+
+    /**
+     * Returneaza vehicule disponibile
+     */
+    public List<VehiculMilitar> getVehiculDisponibile() {
+
+        List<VehiculMilitar> disponibile =
+                new ArrayList<>();
+
+        for (VehiculMilitar v : inventarVehicule) {
+
+            if (v.verificaDisponibilitate()) {
+                disponibile.add(v);
+            }
+        }
+
+        return disponibile;
+    }
+
+    /**
+     * Verificare combustibil suficient
+     */
+    public boolean verificaCombustibilVehicule() {
+
+        for (VehiculMilitar v : inventarVehicule) {
+
+            if (v.getNivelCombustibil() >= 20) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Realimentare vehicule
+     */
+    public void realimentareVehicule() {
 
         System.out.println(
-                "Vehicul adaugat in inventar.");
+                "Programare realimentare vehicule...");
+
+        for (VehiculMilitar v : inventarVehicule) {
+
+            if (v.getNivelCombustibil() < 20) {
+
+                v.alimenteaza(50);
+
+                v.actualizareStare("Disponibil");
+            }
+        }
+
+        System.out.println(
+                "Realimentare finalizata.");
+    }
+
+    /**
+     * Confirmare realimentare
+     */
+    public boolean confirmareRealimentare() {
+
+        return verificaCombustibilVehicule();
+    }
+
+    public void adaugaPersonal(Utilizator utilizator) {
+
+        personal.add(utilizator);
+    }
+
+    public List<VehiculMilitar> getToateVehiculele() {
+
+        return inventarVehicule;
     }
 
     public void adaugaArmament(String idArmament,
@@ -61,50 +134,5 @@ public class BazaMilitara {
                 );
 
         inventarArmament.add(armament);
-
-        System.out.println(
-                "Armament adaugat in baza.");
-    }
-
-    public List<VehiculMilitar> getVehiculDisponibile() {
-
-        List<VehiculMilitar> disponibile =
-                new ArrayList<>();
-
-        for (VehiculMilitar v : inventarVehicule) {
-
-            if (v.verificaDisponibilitate()) {
-                disponibile.add(v);
-            }
-        }
-
-        return disponibile;
-    }
-
-    public List<VehiculMilitar> getVehiculDefecte() {
-
-        List<VehiculMilitar> defecte =
-                new ArrayList<>();
-
-        for (VehiculMilitar v : inventarVehicule) {
-
-            if (!v.verificaDisponibilitate()) {
-                defecte.add(v);
-            }
-        }
-
-        return defecte;
-    }
-
-    public List<VehiculMilitar> getToateVehiculele() {
-        return inventarVehicule;
-    }
-
-    public void adaugaPersonal(Utilizator utilizator) {
-
-        personal.add(utilizator);
-
-        System.out.println(
-                "Membru adaugat in baza.");
     }
 }
