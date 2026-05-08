@@ -1,38 +1,68 @@
 package modele;
 
-/**
- * CONCEPT: MOSTENIRE (INHERITANCE) - Clasa Abstracta
- * De ce: Definește un șablon comun pentru toate vehiculele, obligand subclasele
- * sa implementeze logica specifica (pragul de combustibil).
- */
-public abstract class VehiculMilitar {
-    protected String id;
-    protected String model;
-    protected double nivelCombustibil;
-    protected String stare;
+public class VehiculMilitar {
 
-    public VehiculMilitar(String id, String model, double nivelCombustibil, String stare) {
+    private String id;
+    private String model;
+    private double nivelCombustibil;
+    private String stare;
+
+    public VehiculMilitar(String id,
+                          String model,
+                          double nivelCombustibil,
+                          String stare) {
+
         this.id = id;
         this.model = model;
         this.nivelCombustibil = nivelCombustibil;
         this.stare = stare;
     }
 
-    // Metode abstracte: forteaza polimorfismul în subclase
-    public abstract double getPragMinimCombustibil();
-
-    public String getStare() { return stare; }
-
     public void actualizareStare(String stareDorita) {
-        // Logica decizionala bazata pe propritatile specifice obiectului curent
-        if (nivelCombustibil < getPragMinimCombustibil()) {
-            this.stare = "Indisponibil_Lipsa_Combustibil";
+
+        if (nivelCombustibil < 20) {
+
+            this.stare =
+                    "Indisponibil_Lipsa_Combustibil";
+
         } else {
+
             this.stare = stareDorita;
         }
+
+        System.out.println(
+                "Starea vehiculului a fost actualizata.");
     }
 
     public void alimenteaza(double cantitate) {
-        this.nivelCombustibil += cantitate;
+
+        if (cantitate > 0) {
+
+            this.nivelCombustibil += cantitate;
+
+            System.out.println(
+                    "Vehicul alimentat.");
+        }
+    }
+
+    public boolean verificaDisponibilitate() {
+
+        return "Disponibil".equals(stare);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public double getNivelCombustibil() {
+        return nivelCombustibil;
+    }
+
+    public String getStare() {
+        return stare;
     }
 }
