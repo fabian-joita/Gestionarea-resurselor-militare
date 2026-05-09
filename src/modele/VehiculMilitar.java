@@ -7,6 +7,13 @@ public class VehiculMilitar {
     private double nivelCombustibil;
     private String stare;
 
+
+    public VehiculMilitar(){
+        id = "n/a";
+        model = "n/a";
+        nivelCombustibil = 0.0;
+        stare = "n/a";
+    }
     public VehiculMilitar(String id,
                           String model,
                           double nivelCombustibil,
@@ -19,19 +26,9 @@ public class VehiculMilitar {
     }
 
     public void actualizareStare(String stareDorita) {
+        this.stare = stareDorita;
 
-        if (nivelCombustibil < 20) {
-
-            this.stare =
-                    "Indisponibil_Lipsa_Combustibil";
-
-        } else {
-
-            this.stare = stareDorita;
-        }
-
-        System.out.println(
-                "Starea vehiculului a fost actualizata.");
+        System.out.println("Starea vehiculului a fost actualizata.");
     }
 
     public void alimenteaza(double cantitate) {
@@ -65,4 +62,6 @@ public class VehiculMilitar {
     public String getStare() {
         return stare;
     }
+
+    public void setNivelCombustibil(int nivel){ this.nivelCombustibil = nivel;}
 }
