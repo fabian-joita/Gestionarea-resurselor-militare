@@ -38,15 +38,13 @@ public class OperatorLogistic extends Utilizator {
                 "Stoc combustibil actualizat.");
     }
 
-    /**
-     * Raportare lipsa resursa
-     */
-    public void raporteazaLipsa(BazaMilitara baza,
-                                String resursa,
-                                Comandant comandant) {
+    public void raporteazaLipsa(
+            String resursa,
+            Comandant comandant) {
 
         System.out.println(
-                "Lipsa raportata: " + resursa);
+                "Lipsa raportata: "
+                        + resursa);
 
         comandant.primesteNotificare(
                 "Lipsa resursa: "

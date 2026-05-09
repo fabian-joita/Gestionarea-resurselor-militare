@@ -36,11 +36,14 @@ public class VehiculMilitar {
 
     public void alimenteaza(double cantitate) {
 
-        if (cantitate > 0) {
+        if (cantitate < 0) {
 
-            this.nivelCombustibil +=
-                    cantitate;
+            throw new IllegalArgumentException(
+                    "Cantitatea nu poate fi negativa."
+            );
         }
+
+        this.nivelCombustibil += cantitate;
     }
 
     public boolean verificaDisponibilitate() {
@@ -54,5 +57,13 @@ public class VehiculMilitar {
 
     public String getStare() {
         return stare;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getId() {
+        return id;
     }
 }

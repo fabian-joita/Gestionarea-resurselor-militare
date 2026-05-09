@@ -17,12 +17,14 @@ public class InginerMecanic extends Utilizator {
         this.specializare = specializare;
     }
 
-    public boolean inspecteazaVehicul(VehiculMilitar vehicul) {
+    public boolean inspecteazaVehicul(
+            VehiculMilitar vehicul) {
 
         System.out.println(
                 "Se efectueaza inspectia tehnica...");
 
-        if (vehicul.getNivelCombustibil() < 10) {
+        if ("Indisponibil_Lipsa_Combustibil"
+                .equals(vehicul.getStare())) {
 
             vehicul.actualizareStare(
                     "Necesita Mentenanta");
@@ -30,7 +32,8 @@ public class InginerMecanic extends Utilizator {
             return false;
         }
 
-        vehicul.actualizareStare("Disponibil");
+        vehicul.actualizareStare(
+                "Disponibil");
 
         return true;
     }

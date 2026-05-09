@@ -28,9 +28,6 @@ public class BazaMilitara {
                 new ArrayList<>();
     }
 
-    /**
-     * Adaugare vehicul
-     */
     public void adaugaVehiculInInventar(String id,
                                         String model,
                                         double combustibil,
@@ -47,9 +44,6 @@ public class BazaMilitara {
         inventarVehicule.add(vehicul);
     }
 
-    /**
-     * Returneaza vehicule disponibile
-     */
     public List<VehiculMilitar> getVehiculDisponibile() {
 
         List<VehiculMilitar> disponibile =
@@ -65,14 +59,15 @@ public class BazaMilitara {
         return disponibile;
     }
 
-    /**
-     * Verificare combustibil suficient
-     */
     public boolean verificaCombustibilVehicule() {
 
-        for (VehiculMilitar v : inventarVehicule) {
+        List<VehiculMilitar> disponibile =
+                getVehiculDisponibile();
+
+        for (VehiculMilitar v : disponibile) {
 
             if (v.getNivelCombustibil() >= 20) {
+
                 return true;
             }
         }
@@ -80,9 +75,6 @@ public class BazaMilitara {
         return false;
     }
 
-    /**
-     * Realimentare vehicule
-     */
     public void realimentareVehicule() {
 
         System.out.println(
@@ -102,9 +94,6 @@ public class BazaMilitara {
                 "Realimentare finalizata.");
     }
 
-    /**
-     * Confirmare realimentare
-     */
     public boolean confirmareRealimentare() {
 
         return verificaCombustibilVehicule();
@@ -134,5 +123,21 @@ public class BazaMilitara {
                 );
 
         inventarArmament.add(armament);
+    }
+
+    public List<VehiculMilitar> getVehiculDefecte() {
+
+        List<VehiculMilitar> defecte =
+                new ArrayList<>();
+
+        for (VehiculMilitar v : inventarVehicule) {
+
+            if (!v.verificaDisponibilitate()) {
+
+                defecte.add(v);
+            }
+        }
+
+        return defecte;
     }
 }

@@ -68,7 +68,6 @@ public class Main {
 
         // Raportare lipsa resurse
         operator.raporteazaLipsa(
-                baza,
                 "Munitie",
                 comandant
         );

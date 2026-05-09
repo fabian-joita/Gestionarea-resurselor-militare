@@ -24,9 +24,6 @@ public class Comandant extends Utilizator {
                 new ArrayList<>();
     }
 
-    /**
-     * Operatie complexa pentru diagrama de activitati
-     */
     public boolean aprobareDecizieLogistica(
             BazaMilitara baza) {
 
@@ -76,18 +73,12 @@ public class Comandant extends Utilizator {
         return true;
     }
 
-    /**
-     * Pregatire notificare lipsa vehicule
-     */
     public void pregatireNotificareLipsaVehicule() {
 
         primesteNotificare(
                 "Nu exista vehicule disponibile.");
     }
 
-    /**
-     * Primire notificare
-     */
     public void primesteNotificare(String mesaj) {
 
         notificari.add(mesaj);
@@ -96,9 +87,6 @@ public class Comandant extends Utilizator {
                 "Notificare comandant: " + mesaj);
     }
 
-    /**
-     * Generare raport
-     */
     public void genereazaRaport() {
 
         System.out.println(
