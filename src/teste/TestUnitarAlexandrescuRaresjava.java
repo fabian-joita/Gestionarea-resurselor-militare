@@ -1,137 +1,98 @@
 package teste;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 import modele.InginerMecanic;
 import modele.VehiculMilitar;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-class InginerMecanicTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    // =========================
-    // TEST 1: Inspectie vehicul - combustibil mic
-    // =========================
+public class TestUnitarAlexandrescuRaresjava { // <-- Am corectat numele clasei aici
+
+    private InginerMecanic inginer;
+    private VehiculMilitar vehicul;
+
+    @BeforeEach
+    void setUp() {
+        // Initializam un inginer si un vehicul de test inainte de fiecare scenariu
+        inginer = new InginerMecanic("ing_01", "U100", "Andrei", "Tancuri");
+        vehicul = new VehiculMilitar("V-01", "TR-85", 50.0, "Disponibil");
+    }
+
+    // =======================================================================================
+    // 1. FORTAREA EXCEPTIILOR (Am inlocuit rolul cu validarea datelor nule)
+    // =======================================================================================
     @Test
-    void test_inspecteazaVehicul_cu_combustibil_redus() {
+    void testInregistreazaMentenanta_ExceptieDacaVehicululEsteNull() {
+        // ACT & ASSERT: Verificam ca sistemul arunca exceptie daca nu ii dam un vehicul valid
+        assertThrows(NullPointerException.class, () -> {
+            inginer.inregistreazaMentenanta(null, "Schimbare ulei");
+        }, "Sistemul ar trebui sa arunce NullPointerException daca vehiculul trimis este null!");
+    }
 
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.setNivelCombustibil(5);
+    // =======================================================================================
+    // 2. TESTE PARAMETRIZATE - LIMITE INFERIOARE/SUPERIOARE (Boundary Testing)
+    // =======================================================================================
+    @ParameterizedTest(name = "Test Combustibil={0} -> Rezultat asteptat={1}, Stare={2}")
+    @CsvSource({
+            "5.0,  false, Necesita Mentenanta",  // Limita inferioara (Sub prag)
+            "9.9,  false, Necesita Mentenanta",  // Fix sub pragul decizional
+            "10.0, true,  Disponibil",           // Limita exacta (Boundary Value)
+            "10.1, true,  Disponibil",           // Fix peste prag
+            "100.0, true, Disponibil"            // Valoare nomala/superioara
+    })
+    void testInspecteazaVehicul_ValoriLimita(double combustibil, boolean rezultatAsteptat, String stareAsteptata) {
+        // Setam nivelul de combustibil din tabelul CsvSource
+        vehicul.setNivelCombustibil((int) combustibil);
 
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
-
+        // Apelam metoda
         boolean rezultat = inginer.inspecteazaVehicul(vehicul);
 
-        assertFalse(rezultat);
-        assertEquals("Necesita Mentenanta", vehicul.getStare());
+        // Validam outputul metodei si modificarea starii vehiculului
+        assertEquals(rezultatAsteptat, rezultat);
+        assertEquals(stareAsteptata, vehicul.getStare());
     }
 
-    // =========================
-    // TEST 2: Inspectie vehicul - OK
-    // =========================
+    // =======================================================================================
+    // 3. COMPLEXITATEA SCENARIULUI DIN DIAGRAMA (Happy Path + Ramura de <<extend>>)
+    // =======================================================================================
     @Test
-    void test_inspecteazaVehicul_ok() {
+    void testScenariuMentenanta_CuExtend() {
+        // ARRANGE: Setam starea initiala
+        vehicul.actualizareStare("Defect");
 
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.setNivelCombustibil(50);
+        // VERIFICARE INITIALA (Demonstram ca nu e doar de forma)
+        assertEquals("Defect", vehicul.getStare(), "Verificare initiala: Vehiculul trebuie sa fie defect inainte de a incepe.");
+        assertFalse(inginer.isMentenantaInregistrata(), "Verificare initiala: Mentenanta nu trebuie sa fie deja inregistrata.");
 
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
+        // ACT: Executam fluxul principal
+        inginer.inregistreazaMentenanta(vehicul, "Reparatie motor");
 
-        boolean rezultat = inginer.inspecteazaVehicul(vehicul);
-
-        assertTrue(rezultat);
-        assertEquals("Disponibil", vehicul.getStare());
+        // ASSERT: Verificam starea FINALA (S-a modificat pe bune!)
+        assertTrue(inginer.isServiciiVerificate(), "<<extend>> trebuia sa fie parcurs!");
+        assertTrue(inginer.isMentenantaInregistrata(), "Mentenanta de baza a fost finalizata!");
+        assertEquals("In Mentenanta", vehicul.getStare(), "Starea vehiculului s-a schimbat cu succes la final!");
     }
 
-    // =========================
-    // TEST 3: Inregistrare mentenanta (fara verificare servicii)
-    // =========================
+    // =======================================================================================
+    // 4. COMPLEXITATE - RAMURA ALTERNATIVA (Ocolirea <<extend>>-ului)
+    // =======================================================================================
     @Test
-    void test_inregistrare_mentenanta_fara_verificare() {
-
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.actualizareStare("OK");
-
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
-
-        inginer.inregistreazaMentenanta(vehicul, "revizie");
-
-        assertEquals("In Mentenanta", vehicul.getStare());
-    }
-
-    // =========================
-    // TEST 4: Verificare servicii mentenanta (extend - TRUE)
-    // =========================
-    @Test
-    void test_verifica_servicii_permis() {
-
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.actualizareStare("OK");
-
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
-
-        boolean rezultat =
-                inginer.verificaServiciiMentenanta(vehicul);
-
-        assertTrue(rezultat);
-    }
-
-    // =========================
-    // TEST 5: Verificare servicii mentenanta (extend - FALSE)
-    // =========================
-    @Test
-    void test_verifica_servicii_blocat() {
-
-        VehiculMilitar vehicul = new VehiculMilitar();
+    void testScenariuMentenanta_FaraExtend() {
+        // ARRANGE: Setam starea initiala
         vehicul.actualizareStare("In Mentenanta");
 
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
+        // VERIFICARE INITIALA
+        assertEquals("In Mentenanta", vehicul.getStare(), "Vehiculul este deja in mentenanta.");
 
-        boolean rezultat =
-                inginer.verificaServiciiMentenanta(vehicul);
+        // ACT
+        inginer.inregistreazaMentenanta(vehicul, "Continuare reparatii");
 
-        assertFalse(rezultat);
-    }
-
-    // =========================
-    // TEST 6: Flux complet - inregistrare + extend
-    // =========================
-    @Test
-    void test_flux_complet_mentenanta() {
-
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.actualizareStare("OK");
-
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
-
-        inginer.inregistreazaMentenanta(vehicul, "revizie");
-
-        assertEquals("In Mentenanta", vehicul.getStare());
-    }
-
-    // =========================
-    // TEST 7: Flux complet inspectie + mentenanta
-    // =========================
-    @Test
-    void test_flux_integrat() {
-
-        VehiculMilitar vehicul = new VehiculMilitar();
-        vehicul.setNivelCombustibil(5);
-
-        InginerMecanic inginer =
-                new InginerMecanic("M1", "1", "Popescu", "Mecanic");
-
-        boolean inspectie = inginer.inspecteazaVehicul(vehicul);
-
-        if (!inspectie) {
-            inginer.inregistreazaMentenanta(vehicul, "reparatie");
-        }
-
-        assertEquals("In Mentenanta", vehicul.getStare());
+        // ASSERT: Validam ocolirea ramurii si ca starea a ramas corecta
+        assertFalse(inginer.isServiciiVerificate(), "Ramura <<extend>> trebuia ocolita.");
+        assertTrue(inginer.isMentenantaInregistrata());
+        assertEquals("In Mentenanta", vehicul.getStare(), "Starea trebuie sa ramana In Mentenanta.");
     }
 }
