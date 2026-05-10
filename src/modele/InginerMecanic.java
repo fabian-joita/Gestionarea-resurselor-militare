@@ -23,8 +23,6 @@ public class InginerMecanic extends Utilizator {
     }
 
     public void inregistreazaMentenanta(VehiculMilitar vehicul, String operatie) {
-        // 1. EVALUARE STATUS (Punctul de <<extend>> din diagrama de activitati)
-        // Se face inainte de a schimba starea vehiculului!
         if (verificaServiciiMentenanta(vehicul)) {
             serviciiVerificate = true;
             System.out.println("<<extend>> S-au verificat si asociat serviciile de mentenanta.");
@@ -32,13 +30,11 @@ public class InginerMecanic extends Utilizator {
             serviciiVerificate = false;
         }
 
-        // 2. SALVARE INREGISTRARE (Ultimul pas din diagrama)
         vehicul.actualizareStare("In Mentenanta");
         mentenantaInregistrata = true;
     }
 
     public boolean verificaServiciiMentenanta(VehiculMilitar vehicul) {
-        // Logica ta: daca e deja in mentenanta, nu mai verificam
         if ("In Mentenanta".equals(vehicul.getStare())) {
             return false;
         }
