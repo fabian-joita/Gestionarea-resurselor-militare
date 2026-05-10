@@ -42,6 +42,18 @@ public class OperatorLogistic extends Utilizator {
             String resursa,
             Comandant comandant) {
 
+        if (resursa == null || resursa.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Denumirea resursei nu poate fi goala."
+            );
+        }
+
+        if (comandant == null) {
+            throw new IllegalArgumentException(
+                    "Comandantul nu poate fi null."
+            );
+        }
+
         System.out.println(
                 "Lipsa raportata: "
                         + resursa);

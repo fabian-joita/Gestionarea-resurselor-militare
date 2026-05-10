@@ -106,4 +106,9 @@ public class Comandant extends Utilizator {
             }
         }
     }
+
+    public List<String> getNotificari() {
+        return notificari;
+    }
+
 }
